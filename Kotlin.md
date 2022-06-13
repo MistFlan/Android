@@ -192,6 +192,295 @@ Log.e()
 
 
 
+### 二、Kotlin快速入门
+
+##### 1、Kotlin简介
+
+```tex
+Kotlin是由JetBrains公司开发和设计的。2011年公布了第一个版本，2012年开源。2016年发布1.0正式版。2017年Google宣布Kotlin正式成为Android一级开发语言。
+虽然Java需要通过javac编译为class文件，但是编译生成的并不是计算机可识别的二进制文件，只有通过JAVA虚拟机才能识别。所以Java属于解释性语言。
+只要能将代码编译成相同规格的class文件，Java虚拟机就能识别。所以Kotlin能取代Java开发Andrid。
+Kotlin语法更简洁。并且在安全性方面更优秀。几乎杜绝了空指针。
+```
+
+##### 2、如何运行Kotlin代码
+
+```tex
+和Java一样，只需要创建一个有主函数的类即可点击代码左边的箭头图标运行。
+右键NEW-Kotlin File/Class-Class 输入名称。
+```
+
+##### 3、开始编程
+
+###### 3.1 变量
+
+```kotlin
+// Java是强类型语言 所以创建变量时首先需要声明变量类型
+// Kotlin和JS类似 但是只有允许val和var
+// val是value的简写 用来声明一个不可变的变量 在初始赋值之后就再也不能重新赋值 对应Java的final声明
+// var是variable的简写 用来声明一个可变的变量 在初始赋值之后仍然可以再被重新赋值
+// 定义一个变量a 并赋值10 变量a就会自动推导成整型变量
+fun main() {
+    val a = 10
+    println("a = " + a)
+}
+
+// 如果需要对一个变量延迟赋值 Kotlin就无法自动推导它的类型了 所以Kotlin提供了显式声明的方法
+val a: Int = 10
+
+// 如果对val变量重新赋值会报错
+fun main() {
+    var a: Int = 10
+    a = a * 10
+    println("a = " + a)
+}
+
+// 一个好的编程习惯是 除非一个变量明确允许被修改 否则都应该加上静态final关键字
+// 优先是同val来声明变量 当val不能满足需求时再改为var
+```
+
+###### 3.2 函数
+
+```kotlin
+// 函数是运行代码的载体 运行函数时 函数中的所有代码都会全部运行
+// Kotlin的method语法
+// fun是定义函数的关键字 methodName是方法名
+// param1: Int, param2: String是入参 声明格式为 参数名:参数类型
+// Int是可选 用于声明函数会返回声明类型的数据 如果不需要返回可以忽略
+fun methodName(param1: Int, param2: String): Int {
+    return 0
+}
+
+// 定义一个largerNumber函数 接收两个整型参数 返回两个参数中更大的数
+// 函数体内使用了max函数 这个函数是Kotlin提供的一个内置函数 如果使用了自动补全功能 会自动导入import kotlin.math.max 而不需要手动导入
+fun largerNumber(num1: Int, num2: Int): Int {
+    return max(num1, num2)
+}
+// 接下来调用largerNumber函数
+fun main() {
+    val hajiang = 8
+    val ayu = 9
+    val largerNum = largerNumber(hajiang, ayu)
+    println("largerNumber is " + largerNum)
+}
+
+// 语法糖 当一个函数只有一行代码 可以不必编写函数体 可以直接将唯一的一行代码卸载函数定义的尾部 中间用等号连接
+fun largerNumber(num1: Int, num2: Int): Int = max(num1, num2)
+// 由于max函数返回的是Int类型 所以Kotlin可以推导出largerNumber函数返回类型也是Int 这样就可以不必显式声明返回值类型
+fun largerNumber(num1: Int, num2: Int) = max(num1, num2)
+```
+
+###### 3.3 逻辑控制
+
+```kotlin
+// Kotlin的条件语句主要有两种实现方式 if和when
+fun largerNumber(num1: Int, num2: Int): Int {
+    var value = 0
+    if (num1 > num2) {
+        value = num1
+    } else {
+        value = num2
+    }
+    return value
+}
+// Kotlin的if语句是可以有返回值的 返回值就是if语句每一个条件中最后一行代码的返回值 所以可以简写如下
+// 这里由于是直接赋值给value 没有重复赋值 所以可以使用val来声明value
+fun largerNumber(num1: Int, num2: Int): Int {
+    val value = if (num1 > num2) {
+        num1
+    } else {
+        num2
+    }
+    return value
+}
+// 还可以直接使用if语句直接返回
+fun largerNumber(num1: Int, num2: Int): Int {
+    return if (num1 > num2) {
+        num1
+    } else {
+        num2
+    }
+}
+// 虽然largerNumber不止一行 但是这个if语句可以视为一个整体 可以使用等号串连在函数定义的尾部
+fun largerNumber(num1: Int, num2: Int) = if (num1 > num2) {
+    num1
+} else {
+    num2
+}
+// 还可以再次精简
+fun largerNumber(num1: Int, num2: Int) = if (num1 > num2) num1 else num2
+
+// 编写一个查询成绩的功能 通过输入姓名 返回分数 如果使用if语句来实现
+fun getScore(name: String) = if (name == "HaJiang") {
+    8
+} else if (name == "ayu") {
+    110
+} else 0
+// 如果使用when语句来实现
+fun getScore(name: String) = when (name) {
+    "HaJiang" -> 8
+    "Yu" -> 110
+    else -> 0
+}
+// when语句允许传入一个任意类型的参数 然后在when结构体中定义一些列的条件 格式为 匹配值->{执行逻辑} 当执行逻辑只有一行代码时 {}可以省略
+// 除了精确匹配 when语句还运行进行类型匹配 is就是类型匹配的核心 相当于Java的instanceof关键字
+fun checkNumber(num: Number) {
+    when (num) {
+        is Int -> println("number is Int")
+        is Double -> println("number is Double")
+        else -> println("number is Unknown")
+    }
+}
+// when语句支持不带参数使用
+fun getScore(name: String) = when {
+    name == "HaJiang" -> 8
+    name == "Yu" -> 110
+    else -> 0
+}
+// 假设所有H开头的名字都返回同样分数 则可以通过不带参数的when扩展
+fun getScore(name: String) = when {
+    name.startsWith("H") -> 8
+    name == "Yu" -> 110
+    else -> 0
+}
+
+// Kotlin也提供了while和for while语句和Java基本一致 for-i循环在Kotlin被舍弃 for-each循环则被Kotlin进行大幅加强 变成for-in
+// 首先需要创建一个闭区间
+fun main() {
+    var range = 0..10
+}
+// 然后通过for-in循环遍历
+fun main() {
+    for (i in 0..10) {
+        println(i)
+    }
+}
+// Kotlin可以通过until关键自来创建一个左闭右开的区间 即[0, 10)
+fun main(){
+    val range = 0 until 10
+}
+// 这个循环将不输出10
+fun main() {
+    for (i in 0 until 10) {
+        println(i)
+    }
+}
+// 默认情况下for-in循环每次执行时会在区间范围内递增1 相当于Java for-i循环的i++ 如果想跳过其中的一些元素可以使用step关键字 相当于i=i+ step后的数字
+fun main() {
+    for (i in 0 until 10 step 2) {
+        println(i)
+    }
+}
+// 如果想创建一个降序的区间 可以使用downTo关键字
+fun main() {
+    for (i in 10 downTo 1) {
+        println(i)
+    }
+}
+```
+
+###### 3.4 面向对象
+
+```kotlin
+// 典中典 忽略
+// 创建一个Person类 右键New->Kotlin File/Class->Class 输入类名
+// Kotlin中实例一个类的方式和Java时基本类似的 简略了new关键字 当你调用某个类的构造函数时 你的意图只可能时对这个类进行实例化 因此即使没有new关键字 也能清晰表达出你的意图
+class Person {
+    var name = ""
+    var age = 0
+
+    fun eat() {
+        println(name + " is eating. He is " + age + " years old.")
+    }
+}
+
+fun main() {
+    val p = Person()
+    p.name = "HaJiang"
+    p.age = 7
+    p.eat()
+}
+
+// 创建一个Student类继承Person类 首先需要让Person类可以被继承 在Kotlin中所有非抽象类默认都无法被继承 相当于在Java给类声明了final关键字 因为抽象类本身无法创建实例 必须由子类去继承它才能创建 所以抽象列必须可以被继承
+open class Person {
+    var name = ""
+    var age = 0
+
+    fun eat() {
+        println(name + " is eating. He is " + age + " years old.")
+    }
+}
+
+class Student : Person() {
+    var sno = ""
+    var grade = 0
+}
+
+// 任何一个面向对象的编程语言都会有构造函数的概念 Kotlin将构造函数分成了两种 主构造函数和次构造函数 每个类默认都会有一个不带参数的主构造函数 也可以显式的给这个默认的主构造函数声明参数 直接定义在类名的后面
+class Student(val sno: String, val grade: Int) : Person() {
+
+}
+// 如果声明了主构造函数 则在实例化对象时 必须传入主构造函数的要求的所有参数
+fun main() {
+    val student = Student("S123", 5)
+}
+// 如果需要在主构造函数里增加逻辑 可以使用init结构体
+class Student(val sno: String, val grade: Int) : Person() {
+    init {
+        println("sno is : " + sno)
+        println("grade is : " + grade)
+    }
+}
+// 因为子类的构造函数必须调用父类的构造函数 所以如果Person也显示指定了主构造函数 子类Student就必须调用 可以在init里添加 这或许是一种方法 但绝不是最好的方法 因为在大多数的场景下 我没是不需要编写init结构体的
+open class Person(val name: String, val age: Int) {
+    fun eat() {
+        println(name + " is eating. He is " + age + " years old.")
+    }
+}
+// 在Student类的主构造函数中增加父类Person的主构造函数参数时 不能使用val和var来指定参数 否则会导致和父类同名冲突 所以这里传给父类的参数不需要任何关键字 让它的作用域仅限定在主构造函数当中
+class Student(val sno: String, val grade: Int, name: String, age: Int) : Person(name, age) {
+    init {
+        println("sno is : " + sno)
+        println("grade is : " + grade)
+    }
+}
+// 实例化对象
+fun main() {
+    val student = Student("S123", 5, "HaJiang", 7)
+    student.eat()
+}
+
+// Kotlin规定 当一个类既有主构造函数 又有次构造函数时 所有的次构造函数都必须调用主构造函数包括间接调用
+// 次构造函数时通过constructor关键字来定义的 这里定义了两个次构造函数 第一个次构造函数接收name和age参数 有通过this关键字调用了主构造函数 并将sno和grade赋成初始值 第二个次构造函数通过调用第一个次构造函数间接调用了主构造函数 所以能通过语法检查
+class Student(val sno: String, val grade: Int, name: String, age: Int) : Person(name, age) {
+    init {
+        println("sno is : " + sno)
+        println("grade is : " + grade)
+    }
+
+    constructor(name: Stirng, age: Int) : this("", 0, name, age) {}
+
+    constructor() : this("", 0) {}
+}
+// 通过三个构造函数实例化对象
+fun main() {
+    val student1 = Student()
+    student1.eat()
+    val student2 = Student("HaJiang", 7)
+    student2.eat()
+    val student3 = Student("S123", 5, "HaJiang", 7)
+    student3.eat()
+}
+
+// Kotlin允许类只有次构造函数 没有主构造函数 当一个类没有显式的定义主构造函数且定义了次构造函数时 它就是没有主构造函数的
+// 首先Student1类没有显式的定义主构造函数 同时又定义了次构造函数 所以现在Student1类时没有主构造函数的 所以继承Person时也不需要加括号 因为没有主构造函数 所以次构造函数只能直接调用父类的构造函数 所以需要使用super关键字
+class Student1 : Person {
+    constructor(name: String, age: Int) : super(name, age) {}
+}
+```
+
+
+
 ### git需要忽略的文件
 
 ```xml
