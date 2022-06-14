@@ -477,6 +477,273 @@ fun main() {
 class Student1 : Person {
     constructor(name: String, age: Int) : super(name, age) {}
 }
+
+// Kotlin和Java一样 都是单继承结构的语言 任何一个类最多只能继承一个父类 但可以实现任意多个接口 可以在接口类中定义一系列的抽象行为 然后由具体的类去实现
+// 定义一个Study类让Student实现 Kotlih中统一使用冒号表示继承和实现 中间用逗号进行分割 接口没有构造函数 所以不需要添加括号 Kotlin使用override关键字来重写父类或者实现接口中的函数
+interface Study {
+    fun readBooks()
+    fun doHomework()
+}
+
+class Student(name: String, age: Int) : Person(name, age), Study {
+    override fun readBooks() {
+        println(name + " is reading.")
+    }
+
+    override fun doHomework() {
+        println(name + " is doing homework.")
+    }
+}
+// 由于Student实现了Study类 所以doStudy可以接收Student类 并且调用函数 这就是面向接口编程 即多态
+fun main() {
+    val student = Student("Hajiang", 7)
+    doStudy(student)
+}
+
+fun doStudy(study: Study) {
+    study.readBooks()
+    study.doHomework()
+}
+
+// Kotlin还支持对接口中定义的函数进行默认实现 JDK1.8也支持这个功能
+// 在抽象方法doHomework后添加方法体 这个方法体的内容就是它的默认实现 当一个类实现Study接口时 只会强制要求实现readBooks()函数 而doHomeWord()函数则可以选择自由实现 不实现时就会自动使用默认的实现逻辑
+interface Study {
+    fun readBooks()
+    fun doHomework() {
+        println("do homework default implementation.")
+    }
+}
+
+class Student(name: String, age: Int) : Person(name, age), Study {
+    override fun readBooks() {
+        println(name + " is reading.")
+    }
+}
+
+// Java中有public、private、protected和default4种函数可见性修饰符 Kotlin也有4种public、private、protected和internal直接定义在fun关键字前面
+// private 在两种语言种的作用是一致的 都表示只对当前类内部可见 
+// public 虽然作用也是一致的 对所有类都可见 但是在Kotlin种public是默认修饰符 Java则是defalut
+// protected 在Java中表示对当前类、子类和同一包路径下的类可见 而在Kotlin中则表示只对当前类和子类可见
+// internal Kotlin抛弃了Java中的defalutdui同一包路径下的类可见 引入了新的可见性概念internal 对同一模块中的类可见 有一些函数只允许在模块内部调用 不想暴露给外部就可把函数声明成internal
+
+// 在一个规范的系统架构中 数据类通常占据着非常重要的角色 用于将服务端或数据库的数据映射到内存中 为编程逻辑提供数据模型的支持 数据类通常需要重写equals()、hashCode()、toString()等方法 其中equals()方法用于判断两个数据类是否相等 hashCode()方法作为equals()的配套方法 也需要重写 否则会导致Map、Set类等hash相关的系统类无法正常使用 toString()方法用于提供清晰的输入日志
+// 新建一个类 当一个类使用data关键字声明时 就表示这个类是一个数据类 Kotlin根据主构造函数中的参数帮你将equals()、hashCode()、toString()等方法自动生成 当一个类中没有任何代码时 可以忽略大括号
+// 使用data关键字声明的类 创建同一个数据 他们的对象是相等的 反之亦然
+data class CellPhone(val brand: String, val price: Double)
+
+fun main() {
+    val cellPhone1 = CellPhone("Apple", 6666.666)
+    val cellPhone2 = CellPhone("Apple", 6666.666)
+    println(cellPhone1)
+    println("cellphone1 equals cellPhone2 " + (cellPhone1 == cellPhone2))
+}
+
+// 单例模式是最常用、最基础的设计模式之一 用于避免创建重复的对象 全局唯一
+// 在Kotlin中创建单例类只需要将class关键字改成object关键字即可 右键New->Kotlin File/Class->Object
+// 不需要像Java中私有构造函数 提供getInstace()方法 调用也类似Java中静态方法的调用 虽然看上去像是静态方法的调用 Kotlin在背后自动帮我们创建了一个Singleton类的实例 并保证全局唯一
+object Singleton {
+    fun singletonTest(){
+        println("Singleton is called.")
+    }
+}
+fun  main() {
+    Singleton.singletonTest()
+}
+```
+
+###### 3.5 Lambda
+
+```Kotlin
+// 许多现代高级编程语言在很早之前就开始支持Lambda编程 JDK1.8之后加入了Lambda编程的语法支持 Kotlin第一个版本就支持Lambda编程
+
+// 传统意义上的集合主要指List和Set 再广泛一点 像Map这样的键值对数据结构也可以包含进来 List、Set和Map在Java中都是接口 List主要实现类是ArrayList和LinkedList Set的主要实现类是HashSet Map的主要实现类是HashMap
+// 这种初始化集合的方式比较繁琐
+ fun main(){
+    val list = ArrayList<String>()
+    list.add("HaJiang")
+    list.add("ayu")
+    list.add("Flan")
+}
+// Kotlin专门提供了一个内置的listOf()函数来简化初始化集合的写法 for-in不仅可以用来遍历区间 还可以用来遍历集合
+fun main() {
+    val list = listOf("HaJiang", "ayu", "Flan")
+    for (name in list) {
+        println(name)
+    }
+}
+// 不过需要注意的是 listOf()函数创建的是一个不可变的集合 该集合只能用于读取 无法对集合进行添加、修改或删除操作 这和val关键字、类默认不可继承的设计初衷是类似的 Kotlin在不可变性方面控制得极其严格 可以通过mutableListOf()来创建一个可变集合
+fun main(){
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    list.add("ZhuFanDe")
+    for (name in list) {
+        println(name)
+    }
+}
+
+// Set集合得用法几乎一致 只是将创建集合得方式换成了SetOf()和mutableSetOf()函数 需要注意 Set集合底层是使用hash映射机制来存放数据得 因此集合中得元素无法保证有序 这事和List集合最大得不同处
+fun main() {
+    val set = setOf("HaJiang", "ayu", "Flan")
+    for (name in set) {
+        println(name)
+    }
+}
+fun main() {
+    val set = mutableSetOf("HaJiang", "ayu", "Flan")
+    set.add("ZhuFanDe")
+    for (name in set) {
+        println(name)
+    }
+}
+
+// Map是一种键值对形式的数据结构 隐藏在用法上和List、Set集合有较大的不同 传统的Map用法是创建一个HashMap的实例 然后将键值对添加到Map
+fun main() {
+    val map = HashMap<String, Int>()
+    map.put("HaJiang", 8)
+    map.put("ayu", 1)
+    map.put("Flan", 233)
+}
+// 在Kotlin中并不建议使用put()和get()方法来对Map进行添加和读取数据操作 而是使用一种类似于数组下标的语法结构
+fun main(){
+    val map = HashMap<String, Int>()
+    map["HaJiang"] = 8
+    map["ayu"] = 1
+    map["Flan"] = 233
+
+    println(map["HaJiang"])
+}
+// 这仍然不是最简便的写法 Kotlin提供了mapOf()和mutableMapOf()方法来继续简化Map的用法 在mapOf()函数中 可以直接传入初始化的键值对组合来完成对Map集合的创建 这里的键值对组合看上去好像是使用to这个关键字来进行关联的 但其实to并不是关键字 二十一个infix函数
+fun main() {
+    val map = mapOf("HaJiang" to 8, "ayu" to 1, "Flan" to 233)
+}
+// 遍历Map集合的数据 使用的仍然是for-in循环 在循环中 将Map的键值对变量一起声明到一堆括号里面 当进行循环遍历时 每次遍历的结果就会赋值给这两个键值对变量
+fun main() {
+    val map = mapOf("HaJiang" to 8, "ayu" to 1, "Flan" to 233)
+    for ((name, number) in map) {
+        println("name is " + name + " number is " + number)
+    }
+}
+
+// 集合的函数式API有很多 重点学习函数式API的语法结构 也就是Lambda表达式的语法结构
+// Lambda就是一小段可以作为参数传递的代码 正常情况下 向某个函数传参时只能传入变量 而借助Lambda允许传入一小段代码 Kotlin没有限制代码的长度 但是通常不建议在Lambda表达式中编写太长的代码 否则可能会影响代码的可读性
+// Lambda表达式的语法结构 最外层式一对大括号 如果有参数传入到Lambda表达式中的话 还需要声明参数列表 参数列表的结尾使用一个->符号 表示参数列表的结束以及函数体的开始 函数体中可以编写任意行代码 不建议编写太长的代码 最后一行代码会自动作为Lambda表达式的返回值 在很多情况下 并不需要使用Lambda表达式完整的语法结构 有很多种简化的写法
+{参数名1: 参数类型， 参数名2: 参数类型 -> 函数体}
+// 如果使用集合的函数式API 就可以只用一行代码来实现 其实maxByOrNull只是一个普通函数 不过它接收的是一个Lambda类型的参数 并且会在遍历集合式将每次遍历的值作为参数传递给Lambda表达式 其实maxByOrNull函数的工作原理是根据传入的条件来遍历集合找到该条件先的最大值
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    var maxLengthName = ""
+    for (name in list) {
+        if (name.length > maxLengthName.length) {
+            maxLengthName = name
+        }
+    }
+    println("max length name is " + maxLengthName)
+}
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val maxLengthName = list.maxByOrNull { it.length }
+    println("max length name is " + maxLengthName)
+}
+
+// 使用Lambada表达式的语法结构
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val lambda = { name: String -> name.length }
+    val maxLengthName = list.maxByOrNull(lambda)
+    println("max length name is " + maxLengthName)
+}
+// 可简化的点很多 首先 不需要专门定义一个lambda变量 可以直接将lambda表达式传入maxByOrNull函数当中
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val maxLengthName = list.maxByOrNull({ name: String -> name.length })
+    println("max length name is " + maxLengthName)
+}
+// 然后Kotlin规定 当Lambda参数是函数的唯一一个参数时 可以将Lambda表达式移到函数括号的外面
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val maxLengthName = list.maxByOrNull(){ name: String -> name.length }
+    println("max length name is " + maxLengthName)
+}
+// 接下来 如果Lambda参数时函数的唯一一个参数 可以将函数的括号省略
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val maxLengthName = list.maxByOrNull { name: String -> name.length }
+    println("max length name is " + maxLengthName)
+}
+// 由于Kotlin用于出色的类型推导机制 Lambda表达式中的参数列表其实在大多数情况下不必声明参数类型
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val maxLengthName = list.maxByOrNull { name -> name.length }
+    println("max length name is " + maxLengthName)
+}
+// 最后 当lambda表达式的参数列表中只有一个参数是 也不必声明参数名 而是可以使用it关键字来代替
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val maxLengthName = list.maxByOrNull { it.length }
+    println("max length name is " + maxLengthName)
+}
+
+// 集合中的map函数是最常用的一种函数式API 用于将集合中的每个元素都映射成另外的值 映射的规则在Lambda表达式中指定 最终生成一个新的集合 Map函数可以按照我们的需求对集合中的元素进行任意的映射转换
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val newList = list.map { it.toUpperCase() }
+    for (name in newList) {
+        println(name)
+    }
+}
+
+// 另一个比较常用的函数式API filter函数是用来过滤集合中的数据的 可以单独使用 也可以配合map函数一起使用
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val newList = list.filter { it.length <= 5 }.map { it.toUpperCase() }
+    for (name in newList) {
+        println(name)
+    }
+}
+
+// 两个比较常用的函数式API any和all函数 其中any函数用于判断集合中是否至少存在一个元素满足指定条件 all函数用于判断集合中是否所有元素都满足指定条件
+fun main() {
+    val list = mutableListOf("HaJiang", "ayu", "Flan")
+    val anyResult = list.any { it.length <= 5 }
+    val allResult = list.all { it.length <= 5 }
+    println("anyResult is " + anyResult + ", allResult is " + allResult)
+}
+
+// Kotlin在调用Java方法时也可以时殷弘函数式API 只不过有一定的条件限制 如果在Kotlin代码中调用了一个Java方法 并且该方法接收一个Java单抽象方法接口参数 就可以使用函数式API 单抽象方法指的是接口中只有一个待实现方法 如果接口中有多个待实现方法 则无法使用函数式API Java原生API中的Runnable接口只有一个待实现的run()方法
+// 这里使用了匿名类 但是Kotlin舍弃了new关键字 所以改用object关键字
+fun main() {
+    Thread(object : Runnable {
+        override fun run() {
+            println("Thread is running")
+        }
+    }).start()
+}
+
+// 因为Runnable类中只有一个待实现方法 即使这里没有显式的重写run()方法 Kotlin也能自动明白Runnable后面的Lambda表达式就是要在run()方法实现的内容 
+fun main() {
+    Thread(Runnable {
+        println("Thread is running")
+    }).start()
+}
+
+// 如果一个Java方法的参数列表不存在一个以上Java单抽象方法接口参数 还可以将接口名进行省略
+fun main() {
+    Thread({
+        println("Thread is running")
+    }).start()
+}
+
+// 当Lambda表达式时方法的最后一个参数时 可以将Lambada表达式移到方法括号的外面 同时 如果Lambda表达式还是方法的唯一一个参数 还可以将方法的括号省略
+fun main() {
+    Thread() { println("Thread is running") }.start()
+}
+fun main() {
+    Thread { println("Thread is running") }.start()
+}
+
+// 由于Android SDK使用Java编写的 所以在Kotlin中调用这些SDK接口时 还会用到这种Java函数式API的写法 比如点击事件接口 OnClickListener
+button.setOnClickListener {
+    
+}
 ```
 
 
