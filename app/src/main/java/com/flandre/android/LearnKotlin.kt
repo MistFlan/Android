@@ -2,15 +2,206 @@ package com.flandre.android
 
 import kotlin.math.max
 
-// 3.4 面向对象
+// 3.5 Lambda
 fun main() {
-    val student1 = Student()
-    student1.eat()
-    val student2 = Student("HaJiang", 7)
-    student2.eat()
-    val student3 = Student("S123", 5, "HaJiang", 7)
-    student3.eat()
+    Thread { println("Thread is running") }.start()
 }
+
+//fun main() {
+//    Thread() { println("Thread is running") }.start()
+//}
+
+//fun main() {
+//    Thread({
+//        println("Thread is running")
+//    }).start()
+//}
+
+//fun main() {
+//    Thread(Runnable {
+//        println("Thread is running")
+//    }).start()
+//}
+
+//fun main() {
+//    Thread(object : Runnable {
+//        override fun run() {
+//            println("Thread is running")
+//        }
+//    }).start()
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val anyResult = list.any { it.length <= 5 }
+//    val allResult = list.all { it.length <= 5 }
+//    println("anyResult is " + anyResult + ", allResult is " + allResult)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val newList = list.filter { it.length <= 5 }.map { it.toUpperCase() }
+//    for (name in newList) {
+//        println(name)
+//    }
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val newList = list.map { it.toUpperCase() }
+//    for (name in newList) {
+//        println(name)
+//    }
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val maxLengthName = list.maxByOrNull { it.length }
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val maxLengthName = list.maxByOrNull { name -> name.length }
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val maxLengthName = list.maxByOrNull { name: String -> name.length }
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val maxLengthName = list.maxByOrNull(){ name: String -> name.length }
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val maxLengthName = list.maxByOrNull({ name: String -> name.length })
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val lambda = { name: String -> name.length }
+//    val maxLengthName = list.maxByOrNull(lambda)
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    val maxLengthName = list.maxByOrNull { it.length }
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    var maxLengthName = ""
+//    for (name in list) {
+//        if (name.length > maxLengthName.length) {
+//            maxLengthName = name
+//        }
+//    }
+//    println("max length name is " + maxLengthName)
+//}
+
+//fun main() {
+//    val map = mapOf("HaJiang" to 8, "ayu" to 1, "Flan" to 233)
+//    for ((name, number) in map) {
+//        println("name is " + name + " number is " + number)
+//    }
+//}
+
+//fun main() {
+//    val map = mapOf("HaJiang" to 8, "ayu" to 1, "Flan" to 233)
+//}
+
+//fun main(){
+//    val map = HashMap<String, Int>()
+//    map["HaJiang"] = 8
+//    map["ayu"] = 1
+//    map["Flan"] = 233
+//
+//    println(map["HaJiang"])
+//}
+
+//fun main() {
+//    val map = HashMap<String, Int>()
+//    map.put("HaJiang", 8)
+//    map.put("ayu", 1)
+//    map.put("Flan", 233)
+//}
+
+//fun main() {
+//    val set = mutableSetOf("HaJiang", "ayu", "Flan")
+//    set.add("ZhuFanDe")
+//    for (name in set) {
+//        println(name)
+//    }
+//}
+
+//fun main() {
+//    val set = setOf("HaJiang", "ayu", "Flan")
+//    for (name in set) {
+//        println(name)
+//    }
+//}
+
+//fun main(){
+//    val list = mutableListOf("HaJiang", "ayu", "Flan")
+//    list.add("ZhuFanDe")
+//    for (name in list) {
+//        println(name)
+//    }
+//}
+
+//fun main() {
+//    val list = listOf("HaJiang", "ayu", "Flan")
+//    for (name in list) {
+//        println(name)
+//    }
+//}
+
+// fun main(){
+//    val list = ArrayList<String>()
+//    list.add("HaJiang")
+//    list.add("ayu")
+//    list.add("Flan")
+//}
+
+// 3.4 面向对象
+//fun  main() {
+//    Singleton.singletonTest()
+//}
+
+//fun main() {
+//    val cellPhone1 = CellPhone("Apple", 6666.666)
+//    val cellPhone2 = CellPhone("Apple", 6666.666)
+//    println(cellPhone1)
+//    println("cellphone1 equals cellPhone2 " + (cellPhone1 == cellPhone2))
+//}
+
+//fun main() {
+//    val student = Student("Hajiang", 7)
+//    doStudy(student)
+//}
+//
+//fun doStudy(study: Study) {
+//    study.readBooks()
+//    study.doHomework()
+//}
+
+//fun main() {
+//    val student1 = Student()
+//    student1.eat()
+//    val student2 = Student("HaJiang", 7)
+//    student2.eat()
+//    val student3 = Student("S123", 5, "HaJiang", 7)
+//    student3.eat()
+//}
 
 //fun main() {
 //    val student = Student("S123", 5, "HaJiang", 7)
