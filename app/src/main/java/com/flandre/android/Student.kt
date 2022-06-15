@@ -1,10 +1,17 @@
 package com.flandre.android
 
-class Student(name: String, age: Int) : Person(name, age), Study {
+class Student(val sno: String = "", val grade: Int? = null, name: String = "", age: Int = 8) :
+    Person(name, age), Study {
     override fun readBooks() {
         println(name + " is reading.")
     }
 }
+
+//class Student(name: String, age: Int) : Person(name, age), Study {
+//    override fun readBooks() {
+//        println(name + " is reading.")
+//    }
+//}
 
 //class Student(name: String, age: Int) : Person(name, age), Study {
 //    override fun readBooks() {

@@ -2,10 +2,102 @@ package com.flandre.android
 
 import kotlin.math.max
 
-// 3.5 Lambda
+// 3.7 其他
 fun main() {
-    Thread { println("Thread is running") }.start()
+    val student = Student(sno = "8", grade = 1, name = "HaJiang")
+    student.readBooks()
+    student.doHomework()
+    student.eat()
 }
+
+//fun main() {
+//    printParams(str = "world", num = 123)
+//}
+//
+//fun printParams(num: Int, str: String = "hello") {
+//    println("num is $num, str is $str")
+//}
+
+//fun main() {
+//    printParams(123)
+//}
+//
+//fun printParams(num: Int, str: String = "hello") {
+//    println("num is $num, str is $str")
+//}
+
+//fun main() {
+//    val person = Person("HaJiang", 8)
+//    var str = "hello, ${person.name}. nice to meet you."
+//    println(str)
+//}
+
+//val map = mapOf("name" to "HaJiang")
+//
+//fun main() {
+//    var str = "hello, ${map["name"]}. nice to meet you."
+//    println(str)
+//}
+
+// 3.6 空指针异常
+//var study: Study? = null
+//
+//fun doStudy() {
+//    study?.let {
+//        it.readBooks()
+//        it.doHomework()
+//    }
+//}
+
+//fun doStudy(study: Study?) {
+//    study?.let {
+//        it.readBooks()
+//        it.doHomework()
+//    }
+//}
+
+//fun doStudy(study: Study?) {
+//    study?.let { study ->
+//        study.readBooks()
+//        study.doHomework()
+//    }
+//}
+
+//val content: String? = "hello"
+//
+//fun main() {
+//    if (null != content) {
+//        printUpperCase()
+//    }
+//}
+//
+//fun printUpperCase() {
+//    val upperCase = content!!.toUpperCase()
+//    println(upperCase)
+//}
+
+//fun getTextLength(text: String?) = text?.length ?: 0
+
+//fun main() {
+//    doStudy(null)
+//}
+//
+//fun doStudy(study: Study?) {
+//        study?.readBooks()
+//        study?.doHomework()
+//}
+
+//fun doStudy(study: Study?) {
+//    if (null != study) {
+//        study.readBooks()
+//        study.doHomework()
+//    }
+//}
+
+// 3.5 Lambda
+//fun main() {
+//    Thread { println("Thread is running") }.start()
+//}
 
 //fun main() {
 //    Thread() { println("Thread is running") }.start()
