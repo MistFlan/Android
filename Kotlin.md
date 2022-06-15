@@ -732,7 +732,7 @@ fun main() {
     }).start()
 }
 
-// 当Lambda表达式时方法的最后一个参数时 可以将Lambada表达式移到方法括号的外面 同时 如果Lambda表达式还是方法的唯一一个参数 还可以将方法的括号省略
+// 当Lambda表达式是方法的最后一个参数时 可以将Lambada表达式移到方法括号的外面 同时 如果Lambda表达式还是方法的唯一一个参数 还可以将方法的括号省略
 fun main() {
     Thread() { println("Thread is running") }.start()
 }
@@ -744,6 +744,133 @@ fun main() {
 button.setOnClickListener {
     
 }
+```
+
+###### 3.6 空指针检查
+
+```kotlin
+// 空指针时一种不收编程语言检查的运行时异常 只能主动通过逻辑判断来避免 但是不可能将所有潜在的空指针异常全部考虑到 Kotlin解决了这个问题 利用编译时判空检查的机制几乎杜绝了空指针异常 虽然编译时判空检查的机制有时候会导致代码比较难写
+// Kotlin默认所有参数和变量都不可为空 如果尝试向函数传入null参数 将无法通过编译 Kotlin将空指针异常的检查提前到了编译期 
+// Kotlin还提供了另外一套可空的类型系统 但是需要在编译时期就将所有潜在的空指针异常处理 否则也无法通过编译 需要在参数类名后加一个问号
+fun main() {
+    doStudy(null)
+}
+
+fun doStudy(study: Study?) {
+    if (null != study) {
+        study.readBooks()
+        study.doHomework()
+    }
+}
+// 为了在编译器就处理调所有空指针异常 通常需要编写很多额外的检查代码 如果每处检查代码都是用if判断语句 则会让代码变得比较繁琐 而且if判断语句无法处理全局变量的判空
+// 判空辅助工具 首先最常用的?.操作符 当对象不为空时正常调用
+fun doStudy(study: Study?) {
+        study?.readBooks()
+        study?.doHomework()
+}
+// 另一个常用的?:操作符 该操作符左右两边都接收一个表达式 如果左边表达式结果不为空 就返回左边表达式的结果 类似null != 表达式 ? 表达式 : 另一个表达式
+fun getTextLength(text: String?) = text?.length ?: 0
+// Kotlin的空指针检查机制可能无法从逻辑上判断异常 无论content是否定义为静态val参数 content.toUpperCase()仍旧会报错
+val content: String? = "hello"
+
+fun main() {
+    if (null != content) {
+        printUpperCase()
+    }
+}
+
+fun printUpperCase() {
+    val upperCase = content.toUpperCase()
+    println(upperCase)
+}
+// 如果想强行通过编译 可以用断言 写法时在对象后面加上!! 虽然可以通过编译 但是在使用断言的时候 最好提醒一下自己 是不是还有更好的实现方式 你最自信这个对象不会为空的时候 其实可能就是一个潜在空指针异常发生的时候
+fun printUpperCase() {
+    val upperCase = content!!.toUpperCase()
+    println(upperCase)
+}
+// 最后一个辅助工具let 如果study不为空 调用let函数 执行let函数的Lambda表达式
+fun doStudy(study: Study?) {
+    study?.let { study ->
+        study.readBooks()
+        study.doHomework()
+    }
+}
+// 当Lamada参数列表只有一个参数时 可以不声明参数名 直接使用it代替
+fun doStudy(study: Study?) {
+    study?.let {
+        it.readBooks()
+        it.doHomework()
+    }
+}
+// let函数可以处理全局变量的判问题 if判断语句无法做到
+var study: Study? = null
+
+fun doStudy() {
+    study?.let {
+        it.readBooks()
+        it.doHomework()
+    }
+}
+```
+
+###### 3.7 其他
+
+```kotlin
+// 字符串内嵌表达式 Kotlin从一开始就支持了字符串内嵌表达式的功能 支持将表达式直接写在字符串里面 即使是构建非常复杂的字符串
+// Kotlin允许我们在字符串里嵌入${}表达式 并在运行时用表达式执行的结果替代这一部分内容
+fun main() {
+    val person = Person("HaJiang", 8)
+    var str = "hello, ${person.name}. nice to meet you."
+    println(str)
+}
+// Map
+val map = mapOf("name" to "HaJiang")
+
+fun main() {
+    var str = "hello, ${map["name"]}. nice to meet you."
+    println(str)
+}
+
+// 函数的参数默认值 次构造函数在Kotlin中很少使用 因为Kotlin提供了给函数设定参数默认值的功能 在很大程度上能够替代次构造函数的作用 可以在定义函数的时候给任意参数设定一个默认值 这样当调用次函数时就不会强制要求调用方为此参数传值 在没有传值的情况下会自动使用参数的默认值
+fun main() {
+    printParams(123)
+}
+
+fun printParams(num: Int, str: String = "hello") {
+    println("num is $num, str is $str")
+}
+// num is 123, str is hello
+
+// 可以通过键值对的方式来传参 就不必按照参数定义的顺序来传参
+fun main() {
+    printParams(str = "world", num = 123)
+}
+
+fun printParams(num: Int, str: String = "hello") {
+    println("num is $num, str is $str")
+}
+// num is 123, str is world
+
+// 通过函数的参数默认值 可以给主构造函数参数设定默认值
+class Student(val sno: String = "", val grade: Int? = null, name: String = "", age: Int = 8) :
+    Person(name, age), Study {
+    override fun readBooks() {
+        println(name + " is reading.")
+    }
+}
+
+fun main() {
+    val student = Student(sno = "8", grade = 1, name = "HaJiang")
+    student.readBooks()
+    student.doHomework()
+    student.eat()
+}
+
+/**
+HaJiang is reading.
+do homework default implementation.
+HaJiang is eating. He is 8 years old.
+*/
 ```
 
 
