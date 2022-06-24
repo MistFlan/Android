@@ -1,7 +1,11 @@
 package com.flandre.android
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -14,9 +18,82 @@ class FirstActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.first_layout)
         button1.setOnClickListener {
-            Toast.makeText(this, "You clicked Button1", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivityForResult(intent, 1)
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            1 -> if (resultCode == RESULT_OK) {
+                val returnedCode = data?.getStringExtra("data_return")
+                Log.d("FirstActivity", "returned data is $returnedCode")
+            }
+        }
+    }
+
+// 2.4 传递Activity数据
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val data = "Hello SecondActivity"
+//            val intent = Intent(this, SecondActivity::class.java)
+//            intent.putExtra("extra_data", data)
+//            startActivity(intent)
+//        }
+//    }
+
+// 2.3 隐式Intent更多用法
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_DIAL)
+//            intent.data = Uri.parse("tel:10000")
+//            startActivity(intent)
+//        }
+//    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_VIEW)
+//            intent.data = Uri.parse("https://www.baidu.com")
+//            startActivity(intent)
+//        }
+//    }
+
+// 2.2 隐式Intent
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent("com.flandre.android.ACTION_START")
+//            intent.addCategory("com.flandre.android.MY_CATEGORY")
+//            startActivity(intent)
+//        }
+//    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent("com.flandre.android.ACTION_START")
+//            startActivity(intent)
+//        }
+//    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(this, SecondActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.mian, menu)
@@ -32,7 +109,15 @@ class FirstActivity : AppCompatActivity() {
         return true
     }
 
-    // 1、Activity的基本用法
+// 1、Activity的基本用法
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            Toast.makeText(this, "You clicked Button1", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        setContentView(R.layout.first_layout)
