@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 ##### 5、项目构建
 
 ```kotlin
-// Android Studio通过Gradle构建项目 它基于Groovy的领域特定语言DSL来进行项目设置，摒弃了创痛基于XML（如Ant。》和Maven）的各种繁琐配置
+// Android Studio通过Gradle构建项目 它基于Groovy的领域特定语言DSL来进行项目设置，摒弃了基于XML（如Ant和Maven）的各种繁琐配置
 
 // 项目中存在多个build.gradle文件，一个在最外层目录，一个在app模块目录下。
 
@@ -174,13 +174,13 @@ dependencies {
 ```kotlin
 // 使用Log工具类android.util.Log 这个类提供了5个方法打印日志
 // Log方法需要多个参数，第一个参数一般是tag，一般传入类名，主要用于对打印信息进行过滤。第二个参数一般是msg，用于输出具体内容
-// 用于答应琐碎的、意义最小的日志信息。对应级别verbose
+// 用于打印琐碎的、意义最小的日志信息。对应级别verbose
 Log.v()
 // 用于打印一些调试信息。对应级别debug
 Log.d()
 // 用于打印一些比较重要的数据，这些数据应该是可以帮助分析以用户行为的数据，对应级别info
 Log.i()
-// 用于打印警告信息，提示程序在这个地方可能会有潜在的风险，对应界别warn
+// 用于打印警告信息，提示程序在这个地方可能会有潜在的风险，对应级别warn
 Log.w()
 // 用于打印程序中的错误信息，比如程序进入了catch语句中，对应级别error
 Log.e()
@@ -382,9 +382,8 @@ fun main() {
 ###### 3.4 面向对象
 
 ```kotlin
-// 典中典 忽略
 // 创建一个Person类 右键New->Kotlin File/Class->Class 输入类名
-// Kotlin中实例一个类的方式和Java时基本类似的 简略了new关键字 当你调用某个类的构造函数时 你的意图只可能时对这个类进行实例化 因此即使没有new关键字 也能清晰表达出你的意图
+// Kotlin中实例一个类的方式和Java是基本类似的 简略了new关键字 当你调用某个类的构造函数时 你的意图只可能是对这个类进行实例化 因此即使没有new关键字 也能清晰表达出你的意图
 class Person {
     var name = ""
     var age = 0
@@ -871,6 +870,494 @@ HaJiang is reading.
 do homework default implementation.
 HaJiang is eating. He is 8 years old.
 */
+```
+
+### 三、探究Activity
+
+##### 1、Activity的基本用法
+
+```kotlin
+// 右键New->Activity->Empty Activity命名为FirstActivity 不勾选 Generate Layout File 和 Launcher Activity 第一个表示会自动为FirstActivity创建一个对应的布局文件 第二个表示会自动将FirstActivity设置为当前项目的主Activity 勾选Backwards Conmpatibility(AppCompat) 表示会为项目启用向下兼容旧版系统的模式（新版无此选项） 
+// 任何Activity都应该重写onCreate()方法 AS会自动完成
+class FirstActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+}
+
+// 在app/src/main/re目录下右键New->Directory创建layout文件夹 右键New->Layout resource file File name: first_layout | Root element: LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</LinearLayout>
+// 添加一个按钮 android:id是给当前的元素定义一个唯一的标识 android:layout_width指定了当前元素的宽度match_parent表示让当前元素和父元素一样宽 android:layout_height指定了当前元素的高度 wrap_content表示让当前元素的高度能刚好包含内容 android:text表示指定元素中显示的文字内容
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button 1" />
+// 在Activity中加载这个布局 setContentView()方法给当前Activity加载一个布局 一般传入一个布局文件
+class FirstActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+    }
+}
+// 在AndroidManifest文件注册 所有的Activity都要在AndroidManifest.xml中注册才能生效 实际上AS会自动对Activity注册 在<activity>中 android:name指定具体注册哪个Activity ".FirstActivity"表示com.flandre.android.FirstActivity的缩写 因为最外层package标签已经指定了程序的包名是com.flandre.android 仅仅注册了Activity 程序还不能运行 还需要为程序配置主Activity 在<activity>标签加入<intent-filter>标签 还可以使用 android:label 指定Activity中标题栏的内容 需要注意label还会成为启动器中应用程序显示的名称
+        <activity android:name=".FirstActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+// 如果应用程序没有声明任何一个Activity作为主Activity 这个程序仍然可以正常安装 只是无法在启动器中看到或者打开 这种程序一般作为第三方服务供其他应用在内部进行调用
+
+// Toast是Android系统提供的一种非常好的提醒方式 在程序中可以使用它将一些短小的信息通知给用户 这些信息会在一段时间后自动消失 并且不会占用任何屏幕空间
+// 在Activity中 可以通过 findViewById() 方法获取在布局文件中定义的元素 方法返回的是一个继承自View的泛型对象 因此Kotlin无法自动推导它的类型 所以需要显式声明类型 得到按钮实例后 调用 setOnClickListener() 方法为按钮注册一个监听器 通过静态方法 makeText() 创建出一个Toast对象 调用 show() 方法将Toast显示出来 需要注意 makeText() 方法需要传入3个参数 第一个是Context 也就是Toast要求的上下文 Activity本身就是一个Context对象 因此可以传入this 第二个是Toast显示的文本内容 第三个是Toast显示的时长 一般使用两个内置常量 Toast.LENGTH_SHORT和Toast.LENGTH_LONG
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        val button1: Button = findViewById(R.id.button1)
+        button1.setOnClickListener {
+            Toast.makeText(this, "You clicked Button1", Toast.LENGTH_SHORT).show()
+        }
+    }
+// findViewById()方法的作用就是获取布局文件中控件的实例 如果布局文件中有多个控件 就需要调用多次 写法虽然正确 但是很笨拙 于是就有诸如ButterKnife之类的第三方开源库来简化调用 Kotlin在app/build.gradle文件的头部默认引入了一个kotlin-android-extensions插件 这个插件会根据布局文件中定义的控件id自动生成相同名称的变量 可以直接使用 不用再调用findViewById()方法 这种写法是Koutlin编程最推荐的写法
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            Toast.makeText(this, "You clicked Button1", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+// Android提供了一种方式 可以显示菜单 而且不占用屏幕空间
+// 右键res目录-New-Directory directory name:menu 右键menu文件夹-New-Menu resource file file name:main
+// <item>标签用来创建具体的某一个菜单项 android:id给这个菜单项指定唯一标识符 android:title给这个菜单项指定名称
+    <item
+        android:id="@+id/add_item"
+        android:title="Add" />
+    <item
+        android:id="@+id/remove_item"
+        android:title="Remove" />
+// 在FisrtActivity中重写onCreateOptionsMenu方法 menuInflater使用了语法糖 调用了父类的getMenuInflater()方法 再调用MenuInflater对象的inflate()方法 给当前Activity创建菜单 inflate()方法接收两个参数 第一个参数用于指定通过哪个资源文件来创建菜单 第二个参数用于指定菜单项将添加到哪一个Menu对象中 最后返回true 表示显示创建的菜单
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.mian, menu)
+        return true
+    }
+// 还需要重写onOptionsItemSelected()方法定义菜单响应事件 通过调用item.itemId来判断点击的是哪一个菜单项
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.add_item -> Toast.makeText(this, "You clicked Add", Toast.LENGTH_SHORT).show()
+            R.id.remove_item -> Toast.makeText(this, "You clicked Remove", Toast.LENGTH_SHORT)
+                .show()
+        }
+        return true
+    }
+
+// Activity类提供了一个finish()方法 调用这个方法就可以销毁当前的Activity
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            finish()
+        }
+    }
+```
+
+[when复习](#3.3 逻辑控制)
+
+
+
+##### 2、Activity的Intent
+
+Intent是Android程序中各组件之间进行交互的一种重要方式，不仅可以指明当前组件想要执行的动作，还可以在不同组件之间传递数据。Intent一般可用于启动Activity、启动Service以及发送广播等。
+
+###### 2.1 显示Intent
+
+```kotlin
+// 右键New-Activity-Empty Activity-Activity Name:SecondActivity Layout Name:second_layout AS会自动生成SecondActivity.kt和second_layout.xml
+// 修改second_layout 定义一个按钮button2
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button 2" />
+
+</LinearLayout>
+// 在AndroidManifest.xml注册SecondActivity AS已经自动完成了 由于SecondActivity不是主Activity 所以可以不修改默任配置
+
+// Intent有多个构造函数的重载 其中一个是Intent(Context packageContext, Class<?> cls)第一个参数Context要求提供一个启动Activity的上下文 第二个参数Class用于指定想要启动的目标Activity Activity类提供了一个startActivity()方法专门用于启动Activity 它接收一个Intent参数
+// 修改FirstActivity按钮button1的监听事件 构建一个Intent对象 第一个传入当前Activity-this 第二个传入SecondActivity::class.java作目标Activity 相当于Java中SecondActivity.class的写法 最后调用startActivity()方法
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
+    }
+// 按返回键就可以销毁当前Activity 从而返回上一个Activity 使用这种方式来启动Activity 称为显式Intent
+```
+
+###### 2.2 隐式Intent
+
+```kotlin
+// 隐式Intent不指出启动的Activity 而是指定action和category 由系统去分析
+// 打开AndroidManifest在SecondActivity<activity>标签配置<intent-filter>的<action>标签指定当前Activity可以响应com.flandre.android.ACTION_START这个action和<category>标签 只有<action>和<category>同时匹配才能响应
+        <activity android:name=".SecondActivity">
+            <intent-filter>
+                <action android:name="com.flandre.android.ACTION_START" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+// 使用Intent的另一个构造函数 直接传入action的字符串 因为category默认是android.intent.category.DEFAULT 所以可以不需要指定也能启动
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val intent = Intent("com.flandre.android.ACTION_START")
+            startActivity(intent)
+        }
+    }
+// Intent只能指定一个action 但是能指定多个category addCategory()方法添加一个category
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val intent = Intent("com.flandre.android.ACTION_START")
+            intent.addCategory("com.flandre.android.MY_CATEGORY")
+            startActivity(intent)
+        }
+    }
+// 首先需要修改AndroidManifest文件 如果在启动Activity的时候找不到对应的category将会报错 APP会直接崩溃
+        <activity android:name=".SecondActivity">
+            <intent-filter>
+                <action android:name="com.flandre.android.ACTION_START" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.flandre.android.MY_CATEGORY" />
+            </intent-filter>
+        </activity>
+```
+
+###### 2.3 隐式Intent更多用法
+
+```kotlin
+// 使用隐式Intent 不仅可以启动自己程序的Activity还可以启动其他程序的Activity 使多个应用程序之间的功能共享成为了可能 如果需要展示一个网页 只需要调用系统的浏览器来打开这个网页就行了
+// 首先指定Intent的action是Intent.ACTION_VIEW 这是一个Android系统内置的动作 这个动作的常量是android.intent.action.VIEW 然后通过Uri.parse()方法将一个网址字符串解析成一个Uri对象 再去调用Intent的setData()方法传入这个Uri对象 这里使用了语法糖intent.data就等于Java中的setData()方法
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("https://www.baidu.com")
+            startActivity(intent)
+        }
+    }
+
+// 还可以在<intent-filter>标签中再配置一个<data>标签 用于更精确地指定当前Activity能够相应的数据 <data>标签中主要可以配置一下内容
+// android:scheme 用于指定数据的协议部分
+// android:host 用于指定数据的主机名
+// android:prot 用于指定数据的端口
+// android:path 用于指定主机名和端口之后的部分
+// android:mimeType 用于指定可以处理的数据类型 允许使用通配符
+// 只有当<data>标签中指定的内容和Intent中携带的Data完全一致时 当前Activity才能相应 不过<data>标签中一般不会指定过多的内容
+
+// 右键New-Activity-Empty Activity-Activity Name:ThirdActivity-Layout Name:third_layout
+// 修改third_layout.xml添加一个button3
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button 3" />
+
+</LinearLayout>
+// 打开AndroidManifest.xml修改ThirdActivity注册信息 在<intent-filter>标签中配置了<action>为Intent.ACTION_VIEW的常量值和<catetory>为默认的category值 另外在<data>标签中 通过android:scheme指定了数据的协议必须是https协议 这样就能相应一个打开网页的Intent 另外AS认为所有能够相应ACTION_VIEW的Activity都应该加上BROWSABLE的category否则提示警告 可以通过加上tools:ignore="AppLinkUrlError"忽略警告
+        <activity android:name=".ThirdActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
+// 系统自动弹出了显式能够响应这个Intent的所有程序 如果选择了Android就会启动ThirdActivity 虽然我们声明了ThirdActivity时可以相应打开网页的Intent 但实际上这个Activity并没有加载并显示网页的功能 我们还可以指定很多其他协议 比如geo表示显示地理位置 tel表示拨打电话
+// 首先指定action为系统内置动作Intent.ACION_DIAL 然后再data部分指定了协议是tel 号码是10000
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("tel:10000")
+            startActivity(intent)
+        }
+    }
+```
+
+###### 2.4 传递Activity数据
+
+```kotlin
+// Intent在启动Activity的时候还可以传递数据 Intenet中提供了一系列putExtra()方法的重载 可以把数据暂存在Intent中 在启动另一个Activity后 只需要把这些数据从Intent中取出
+// 使用显示Intent方式启动SecondActivity 并通过putExtra()方法传递一个字符串 putExtra()方法接收两个参数 第一个参数是键 第二个参数才是数据
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val data = "Hello SecondActivity"
+            val intent = Intent(this, SecondActivity::class.java)
+            intent.putExtra("extra_data", data)
+            startActivity(intent)
+        }
+    }
+// 在SecondActivity中将传递的数据取出 intent实际上调用的是父类的getIntent()方法 该方法会获取用于启动SecondActivity的Intent 然后调用getStringExtra()方法并传入相应的键值 就能得到数据 由于传递的是字符串所以使用getStringExtra 如果传递的是整形数据 则是哟个getIntExtra()方法 如果传递的是布尔型数据 则使用getBooleanExtra()方法 以此类推
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.second_layout)
+        val extraData = intent.getStringExtra("extra_data")
+        Log.d("SecondActivity", "extra data is $extraData")
+    }
+```
+
+###### 2.5 返回Activity数据
+
+```kotlin
+// 并没有一个用于返回数据的Intent 但是Activity类中还有一个用于启动Activity的startActivityForResult()方法 它期望在Activity销毁的时候能够返回一个结果给上一个Activity 该方法接收两个参数 第一个参数还是Intent 第二个参数是请求码
+// 使用startActivityForResult来启动SecondActivity 请求码只要是一个唯一值即可
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.first_layout)
+        button1.setOnClickListener {
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivityForResult(intent, 1)
+        }
+    }
+// 在SecondActivity给按钮注册点击事件 并在点击事件之呢个添加返回数据的逻辑 构建一个Intent 把要传递的数据据存放在Intent中 然后调用setResult()方法 该方法专门用于向上一个Activity返回数据 接收两个参数 第一个参数哟关于向上一个Activity返回处理结果 一般只是用RESULT_OK或RESULT_CANCELED这两个值 第二个参数则把带有数据的Intent传递回去 最后调用finish()方法销毁当前Activity
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.second_layout)
+        button2.setOnClickListener {
+            val intent = Intent()
+            intent.putExtra("data_return", "Hello FirstActivity")
+            setResult(RESULT_OK, intent)
+            finish()
+        }
+    }
+// 在FitstActivity中重写SecondActivity被销毁之后回调的onActivityResult()方法 该方法有三个参数 第一个参数requestCode即启动Activity时传入的请求码 第二个参数resultCode即返回数据时传入的处理结果 第三个参数data即携带返回数据的Intent 由于在一个Activity中有可能调用startActivityForResult()这个方法去启动很多不同的Activity 每一个Activity都会回调到onActivityResult()这个方法 所以需要通过检查requestCode来判断数据来源
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            1 -> if (resultCode == RESULT_OK) {
+                val returnedCode = data?.getStringExtra("data_return")
+                Log.d("FirstActivity", "returned data is $returnedCode")
+            }
+        }
+    }
+// 如果用户不是通过点击按钮 而是通过按下Back键回到FirstActivity 就需要在SecondActivity的onBackPressed()方法
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra("data_return", "Hello FirstActivity By Back")
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+```
+
+
+
+##### 3、Activity的生命周期
+
+###### 3.1 返回栈
+
+```tex
+Activity是可以层叠的 每启动一个新的Activity 就会覆盖在原Activity上 点击Back键会销毁最上面的Activity
+Android时使用任务task来管理Activity的 一个任务就是一组存放在栈里的Activity的集合 这个栈也被称作返回栈back stack
+栈是一种后进先出的数据结构 每当启动一个新的Activity 就会在返回栈中入栈 并处于栈顶 当按下Back键或调用finish()方法去销毁一个Activity时 处于栈顶的Activity就会出栈 前一个入栈的Activity就会重新处于栈顶位置
+系统总是会显示处于栈顶的Activity给用户
+```
+
+###### 3.2 Activity的状态
+
+```tex
+每个Activity在其生命周期中最多可能会有4种状态
+1 运行状态
+Activity处于返回栈的栈顶时 Activity就处于运行状态 系统一般不会回收
+2 暂停状态
+Activity不再处于栈顶 但仍然可见时 Activity就进入暂停状态 比如被遮挡的Activity 系统一般也不会回收 只有在内存极低的情况下 系统财会考虑回收
+3 停止状态
+Activity不再处于栈顶位置 并且完全不可见的时候 就进入了停止状态 有可能会被系统回收
+4 销毁状态
+Activity从返回栈种移除后就编程了销毁状态 系统最倾向于回收处于这种状态的Activity
+```
+
+###### 3.3 Activity的生存期
+
+```tex
+Activity类定义了7个回调方法 覆盖了Activity生命周期的每一个环节
+onCreate() 在Activity第一次被创建的时候调用 应该在这个方法中完成Activity的初始化操作 比如加载布局、绑定事件
+onStart() 在Activity由不可见变成可见的时候调用
+onResume() 在Activity准备好和用户进行交互的时候调用 此是的Activity一定位于返回栈的栈顶并且处于运行状态
+onPause() 在系统准备去启动获取恢复另一个Activity的时候调用 通常会在这个方法种将一些小号CPU的资源释放调 这个方法的执行速度一定要快 否则会影响到新的栈顶Activity的使用
+onStop() 在Activity完全不可见的时候调用 和onPause()方法的主要区别在于 如果启动的新Activity时一个对话框形式的Activity 那么它会得到执行 而onStop()方法不会执行
+onDestroy() 在Activity被销毁之前调用 之后Activity的状态将变为销毁状态
+onRestart() 在Activity由停止状态变为运行状态之前调用 也就是Activity被重新启动了
+除了onRestart()方法 其他都是两两相对的 所以可以将Activity分为以下3种生存期
+
+完整生存期 Activity在onCreate()方法和onDestroy()方法之间就是完整生存期 一般情况下 一个Activity会在onCreate()方法种完成各种初始化操作 而在onDestory()方法中完成释放内存的操作
+可见生存期 Activity在onStart()方法和onStop()方法之间就是可见生存期 Activity在此期间内对用户总是可见的 即使有可能无法和用户进行交互 可以通过这两个方法合理地管理那些对用户可见的资源 比如在onStart()方法中对资源进行加载 而在onStop()方法中对资源进行释放 从而保证处于停止状态的Activity不会占用过多内存
+前台生存期 Activity在onResume()方法和onPause()方法之间就是前台生存期 在此期间内 Activity总是处于运行状态 此是的Activity是可以和用户进行交互的
+```
+
+###### 3.4 Activity的生命周期
+
+```kotlin
+// 右键New-Activity-Empty Activity-Activity Name:NormalActivity-Layout Name:normal_layout 修改normal_layout.xml文件 添加一个TextView
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is a normal activity" />
+</LinearLayout>
+
+// 右键New-Activity-Empty Activity-Activity Name:DialogActivity-Layout Name:dialog_layout 修改dialog_layout.xml文件 添加一个TextView
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is a dialog activity" />
+</LinearLayout>
+
+// 修改AndroidManifest.xml文件DialogActivity的<activity>标签
+// 指定android:theme属性值为@style/Theme.AppCompat.Dialog使用对话框式的主题
+        <activity
+            android:name=".DialogActivity"
+            android:theme="@style/Theme.AppCompat.Dialog">
+
+        </activity>
+// 修改activity_main.xml 添加两个按钮 用于启动NormalActivity和DialogActivity
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start NormalActivity" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start DialogActivity" />
+</LinearLayout>
+
+// 修改MainActivity
+class MainActivity : AppCompatActivity() {
+
+    private val tag = "MainActivity"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        Log.v(tag, "onCreate")
+
+        startNormalActivity.setOnClickListener {
+            val intent = Intent(this, NormalActivity::class.java)
+            startActivity(intent)
+        }
+
+        startDialogActivity.setOnClickListener {
+            val intent = Intent(this, DialogActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(tag, "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(tag, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(tag, "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(tag, "onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(tag, "onDestroy")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(tag, "onRestart")
+    }
+}
+// 当MainActivity第一次被创建时会依次执行onCreate()、onStart()、onResume()三个方法
+// 点击第一个按钮 会启动NormalActivity 由于NormalActivity完全被遮挡 因此onPause()、onStop()方法都会执行
+// 按下Back键返回MainActivity 由于之前MainActivity已经进入停止状态 所以onRestart()方法会执行 之后会依次执行onStart()、onResume()方法
+// 注意 此时onCreate()方法不会执行 因为MainActivity没有重新创建
+
+// 点击第二个按钮 启动DialogActivity 因为DialogActivity并没有完全遮挡住MainActivity 此时MainActivity只是进入了暂停状态 没有进入停止状态 所以只有onPause()方法执行 onStop()方法并没有执行
+// 按下Back键返回MainActivity 只有onResume()方法会执行
+// 最后在MainActivity按下Bac键退出程序 依次会执行onPause()、onStop()、onDestroy()方法 最终销毁MainActivity
+```
+
+###### 3.5 Activity的回收后处理
+
+```kotlin
+// 当一个Activity进入了停止状态 是有可能被系统回收的 如果在A启动B A进入停止状态 这个时候A被回收 此时返回A时 依旧能显示A 此时不会执行onRestart()方法 而是从onCreate()方法开始执行 A会被重新创建一次
+
+// 基于此 Activit提供了一个onSaveInstanceState()回调方法 该方法可以保证在Activity被回收之前一定会被调用
+// onSaveInstanceState()会携带一个Bundle类型的参数 用于保存数据
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val tempData = "Someting you just typed"
+        outState.putString("data_key", tempData)
+    }
+// 并在onCreate()方法添加处理
+        if (savedInstanceState != null) {
+            val tempData = savedInstanceState.getString("data_key")
+            tempData?.let { Log.d(tag, it) }
+        }
 ```
 
 
