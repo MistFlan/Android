@@ -25,7 +25,9 @@
                 <data android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondActivity">
+        <activity
+            android:name=".SecondActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="com.flandre.android.ACTION_START" />
 
@@ -33,15 +35,17 @@
                 <category android:name="com.flandre.android.MY_CATEGORY" />
             </intent-filter>
         </activity>
-        <activity android:name=".FirstActivity">
-
-        </activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".FirstActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity">
+
         </activity>
     </application>
 

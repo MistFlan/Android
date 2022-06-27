@@ -16,12 +16,56 @@ class FirstActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("FirstActivity", "Task id is $taskId")
         setContentView(R.layout.first_layout)
         button1.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
-            startActivityForResult(intent, 1)
+            startActivity(intent)
         }
     }
+
+// 4.2 singleTop
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("FirstActivity", this.toString())
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(this, SecondActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("FirstActivity", this.toString())
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(this, FirstActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
+
+
+// 4.1 standard
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("FirstActivity", this.toString())
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(this, FirstActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
+
+// 2.5 返回Activity数据
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(this, SecondActivity::class.java)
+//            startActivityForResult(intent, 1)
+//        }
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -31,6 +75,11 @@ class FirstActivity : AppCompatActivity() {
                 Log.d("FirstActivity", "returned data is $returnedCode")
             }
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("FirstActivity", "onRestart")
     }
 
 // 2.4 传递Activity数据
