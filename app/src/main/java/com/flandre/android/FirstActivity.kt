@@ -12,17 +12,27 @@ import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.first_layout.*
 
-class FirstActivity : AppCompatActivity() {
+class FirstActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("FirstActivity", "Task id is $taskId")
         setContentView(R.layout.first_layout)
         button1.setOnClickListener {
-            val intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
+            SecondActivity.actionStart(this, "data1", "data2")
         }
     }
+
+// 4.4 singleInstance
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("FirstActivity", "Task id is $taskId")
+//        setContentView(R.layout.first_layout)
+//        button1.setOnClickListener {
+//            val intent = Intent(this, SecondActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
 
 // 4.2 singleTop
 //    override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,14 +1,72 @@
 package com.flandre.android
 
+import java.lang.StringBuilder
 import kotlin.math.max
 
+
+
+
+// Kotlin课堂 1、标准函数
+//fun main() {
+//    val list = listOf("HaJiang", "ayu", "Flan")
+//    val result = StringBuilder().apply {
+//        append("Start roll call. \n")
+//        for (name in list) {
+//            append(name).append(" \n")
+//        }
+//        append("EveryBody gather.")
+//    }
+//
+//    println(result.toString())
+//}
+
+//fun main() {
+//    val list = listOf("HaJiang", "ayu", "Flan")
+//    val result = StringBuilder().run {
+//        append("Start roll call. \n")
+//        for (name in list) {
+//            append(name).append(" \n")
+//        }
+//        append("EveryBody gather.")
+//        toString()
+//    }
+//
+//    println(result)
+//}
+
+//fun main() {
+//    val list = listOf("HaJiang", "ayu", "Flan")
+//    val result = with(StringBuilder()) {
+//        append("Start roll call. \n")
+//        for (name in list) {
+//            append(name).append(" \n")
+//        }
+//        append("EveryBody gather.")
+//        toString()
+//    }
+//
+//    println(result)
+//}
+
+//fun main() {
+//    val list = listOf("HaJiang", "ayu", "Flan")
+//    val builder = StringBuilder()
+//    builder.append("Start roll call. \n")
+//    for (name in list) {
+//        builder.append(name).append(" \n")
+//    }
+//    builder.append("EveryBody gather.")
+//    val result = builder.toString()
+//    println(result)
+//}
+
 // 3.7 其他
-fun main() {
-    val student = Student(sno = "8", grade = 1, name = "HaJiang")
-    student.readBooks()
-    student.doHomework()
-    student.eat()
-}
+//fun main() {
+//    val student = Student(sno = "8", grade = 1, name = "HaJiang")
+//    student.readBooks()
+//    student.doHomework()
+//    student.eat()
+//}
 
 //fun main() {
 //    printParams(str = "world", num = 123)
