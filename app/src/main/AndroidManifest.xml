@@ -10,11 +10,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ChatActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".DialogActivity"
-            android:theme="@style/Theme.AppCompat.Dialog">
-
-        </activity>
+            android:theme="@style/Theme.AppCompat.Dialog"></activity>
         <activity android:name=".NormalActivity" />
         <activity android:name=".ThirdActivity">
             <intent-filter tools:ignore="AppLinkUrlError">
@@ -37,13 +42,9 @@
         </activity>
         <activity
             android:name=".FirstActivity"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
