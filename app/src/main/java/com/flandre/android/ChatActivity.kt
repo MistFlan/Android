@@ -14,7 +14,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     val tag: String = "ChatActivity"
 
     private val msgList = ArrayList<Msg>()
-    private var adapter: MsgAdapter? = null
+
+    //    private var adapter: MsgAdapter? = null
+    private lateinit var adapter: MsgAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +27,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        adapter = MsgAdapter(msgList)
+        if(!::adapter.isInitialized){
+            adapter = MsgAdapter(msgList)
+        }
         recyclerView.adapter = adapter
         send.setOnClickListener(this)
     }
@@ -47,7 +51,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                 if (content.isNotEmpty()) {
                     val msg = Msg(content, Msg.TYPE_SENT)
                     msgList.add(msg)
-                    adapter?.notifyItemInserted(msgList.size - 1)
+//                    adapter?.notifyItemInserted(msgList.size - 1)
+                    adapter.notifyItemInserted(msgList.size - 1)
                     recyclerView.scrollToPosition(msgList.size - 1)
                     inputText.setText("")
                 }
