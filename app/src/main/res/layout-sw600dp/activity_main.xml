@@ -10,30 +10,16 @@
     <fragment
         android:id="@+id/leftFrag"
         android:name="com.flandre.android.fragment.LeftFragment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/leftFrag"-->
-<!--        android:name="com.flandre.android.fragment.LeftFragment"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_weight="1" />-->
-
-    <FrameLayout
-        android:id="@+id/rightLayout"
+    <fragment
+        android:id="@+id/rightFrag"
+        android:name="com.flandre.android.fragment.RightFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:visibility="gone" />
-
-    <!--    <fragment-->
-    <!--        android:id="@+id/rightFrag"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:name="com.flandre.android.fragment.RightFragment" />-->
+        android:layout_weight="3" />
 
     <com.flandre.android.layout.TitleLayout
         android:layout_width="match_parent"

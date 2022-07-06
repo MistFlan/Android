@@ -9,9 +9,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.flandre.android.dto.Human
+import com.flandre.android.fragment.AnotherRightFragment
+import com.flandre.android.fragment.RightFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -101,6 +104,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "onCreate button", Toast.LENGTH_SHORT).show()
         }
         button.setOnClickListener(this)
+
+        // 2.2 Fragment的动态添加
+        replaceFragment(RightFragment())
     }
 
     private fun initHuman() {
@@ -230,19 +236,41 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                progressBar.progress = progressBar.progress + 10
 //            }
 
-            R.id.button -> {
-                AlertDialog.Builder(this).apply {
-                    setTitle("This is Dialog")
-                    setMessage("Something important.")
-                    setCancelable(false)
-                    setPositiveButton("OK") { dialog, which ->
-                    }
-                    setNegativeButton("Cancel") { dialog, which ->
-                    }
+//            R.id.button -> {
+//                AlertDialog.Builder(this).apply {
+//                    setTitle("This is Dialog")
+//                    setMessage("Something important.")
+//                    setCancelable(false)
+//                    setPositiveButton("OK") { dialog, which ->
+//                    }
+//                    setNegativeButton("Cancel") { dialog, which ->
+//                    }
+//
+//                    show()
+//                }
+//            }
 
-                    show()
-                }
+            // 2.2 Fragment的动态添加
+            R.id.button -> {
+                replaceFragment(AnotherRightFragment())
             }
         }
+    }
+
+    // 2.2 Fragment的动态添加
+//    private fun replaceFragment(fragment: Fragment) {
+//        val fragmentManager = supportFragmentManager
+//        val transaction = fragmentManager.beginTransaction()
+//        transaction.replace(R.id.rightLayout, fragment)
+//        transaction.commit()
+//    }
+
+    // 2.3 Fragment的返回栈
+    private fun replaceFragment(fragment: Fragment) {
+//        val fragmentManager = supportFragmentManager
+//        val transaction = fragmentManager.beginTransaction()
+//        transaction.replace(R.id.rightLayout, fragment)
+//        transaction.addToBackStack(null)
+//        transaction.commit()
     }
 }
