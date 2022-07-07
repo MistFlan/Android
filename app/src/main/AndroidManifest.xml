@@ -10,12 +10,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChatActivity">
+        <activity android:name=".activity.NewsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".activity.NewsContentActivity"></activity>
+        <activity android:name=".ChatActivity"></activity>
         <activity
             android:name=".DialogActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".NormalActivity" />
         <activity android:name=".ThirdActivity">
             <intent-filter tools:ignore="AppLinkUrlError">
